@@ -35,7 +35,6 @@ namespace Client {
             _initSystems
                 .Add(new InitPlayer())
                 .Add(new InitInput())
-                .Add(new InitJoystick())
                 .Add(new InitCamera())
                 .Add(new InitSpawnSystem())
             ;
@@ -44,7 +43,6 @@ namespace Client {
             //;
 
             _runSystems
-                .Add(new JoystickController())
                 .Add(new MoveSystem())
 
                 .Add(new SpawnSystem())

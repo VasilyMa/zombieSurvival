@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   PlayerObject: {fileID: 4361283143185375585, guid: 9c2acb3ad65ccd34cb629c0419d46141, type: 3}
-  MoveSpeed: 0
-  BaseHealth: 0
+  MoveSpeed: 10
+  BaseHealth: 100
