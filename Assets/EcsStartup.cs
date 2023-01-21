@@ -10,8 +10,9 @@ namespace Client {
         public EcsWorld World;
         private GameState _gameState;
         [Header("Systems")]
-        public FloatingJoystick FloatingJoystick;
         public Vector3 CameraOffset;
+        public int Counters;
+        public int EnemiesOnCounter;
 
         [Space(10)]
         [Header("Configs")]
@@ -36,6 +37,7 @@ namespace Client {
                 .Add(new InitInput())
                 .Add(new InitJoystick())
                 .Add(new InitCamera())
+                .Add(new InitSpawnSystem())
             ;
 
             //_menuSystems
@@ -44,6 +46,8 @@ namespace Client {
             _runSystems
                 .Add(new JoystickController())
                 .Add(new MoveSystem())
+
+                .Add(new SpawnSystem())
             ;
 
             _fixedSystems

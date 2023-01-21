@@ -16,10 +16,8 @@ namespace Client
         public GameMode GameMode;
 
         public int EntityPlayer;
-        public int EntityJoystick;
         public int EntityCamera;
 
-        public FloatingJoystick Joystick;
         public Vector3 CameraOffset;
 
         public PlayerConfig PlayerConfig;
@@ -28,7 +26,6 @@ namespace Client
         {
             EcsWorld = ecsStartup.World;
             PlayerConfig = ecsStartup.PlayerConfig;
-            Joystick = ecsStartup.FloatingJoystick;
             CameraOffset = ecsStartup.CameraOffset;
         }
         public static void Clear()
