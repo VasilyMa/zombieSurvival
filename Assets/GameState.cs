@@ -22,6 +22,7 @@ namespace Client
         private GameState(in EcsStartup ecsStartup)
         {
             EcsWorld = ecsStartup.World;
+            PlayerConfig = ecsStartup.PlayerConfig;
         }
         public static void Clear()
         {

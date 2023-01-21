@@ -1,6 +1,6 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
-
+using UnityEngine;
 
 namespace Client {
     sealed class InitPlayer : IEcsInitSystem 
@@ -29,7 +29,18 @@ namespace Client {
             ref var healthComponent = ref _healthPool.Value.Add(entity);
             ref var damageComponent = ref _damagePool.Value.Add(entity);
 
-            var playerObject = _state.Value.PlayerConfig.PlayerObject;
+            var playerObject = GameObject.Instantiate(_state.Value.PlayerConfig.PlayerObject, Vector3.zero, Quaternion.identity);
+
+            moveComponent.MoveSpeed = _state.Value.PlayerConfig.MoveSpeed;
+            healthComponent.Health = _state.Value.PlayerConfig.BaseHealth;
+
+            if (playerObject.TryGetComponent<ECSInfo>(out var Ecsinfo))
+                viewComponent.ECSInfo = Ecsinfo;
+
+            animatorComponent.Animator = viewComponent.ECSInfo.Animator;
+            viewComponent.ECSInfo.Entity = entity;
+            viewComponent.GameObject = playerObject;
+
         }
     }
 }

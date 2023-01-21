@@ -9,6 +9,12 @@ namespace Client {
         EcsSystems _initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems;
         public EcsWorld World;
         private GameState _gameState;
+        [Header("Systems")]
+        public FloatingJoystick FloatingJoystick;
+
+        [Space(10)]
+        [Header("Configs")]
+        public PlayerConfig PlayerConfig;
 
         void Start ()
         {
