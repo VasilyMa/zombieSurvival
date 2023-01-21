@@ -21,12 +21,14 @@ namespace Client
         public Vector3 CameraOffset;
 
         public PlayerConfig PlayerConfig;
+        public GameObject Bullet;
 
         private GameState(in EcsStartup ecsStartup)
         {
             EcsWorld = ecsStartup.World;
             PlayerConfig = ecsStartup.PlayerConfig;
             CameraOffset = ecsStartup.CameraOffset;
+            Bullet = ecsStartup.bullet;
         }
         public static void Clear()
         {

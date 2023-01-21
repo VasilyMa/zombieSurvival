@@ -16,7 +16,6 @@ namespace Client {
                 ref var viewComponent = ref _viewPool.Value.Get(entity);
 
                 viewComponent.Rigidbody.velocity = moveComponent.Direction * moveComponent.MoveSpeed;
-                viewComponent.GameObject.transform.rotation = Quaternion.LookRotation(moveComponent.Rotation);
             }
         }
     }

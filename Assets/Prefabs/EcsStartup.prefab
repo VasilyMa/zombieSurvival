@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d735ce29f470ac4a8461e6b57bb6a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraOffset: {x: 10, y: 10, z: 4}
+  Counters: 0
+  EnemiesOnCounter: 0
+  PlayerConfig: {fileID: 11400000, guid: b663ee79f7343f24ab33b7ca661a128c, type: 2}

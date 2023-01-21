@@ -13,6 +13,7 @@ namespace Client {
         public Vector3 CameraOffset;
         public int Counters;
         public int EnemiesOnCounter;
+        public GameObject bullet;
 
         [Space(10)]
         [Header("Configs")]
@@ -44,12 +45,13 @@ namespace Client {
 
             _runSystems
                 .Add(new MoveSystem())
-
                 .Add(new SpawnSystem())
+                .Add(new PlayerShootSystem())
             ;
 
             _fixedSystems
                 .Add(new CameraSystem())
+                .Add(new ShootSystem())
 
             ;
             //_winSystems
