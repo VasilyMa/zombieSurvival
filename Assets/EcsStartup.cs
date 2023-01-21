@@ -6,11 +6,12 @@ using Leopotam.EcsLite.Di;
 namespace Client {
     public sealed class EcsStartup : MonoBehaviour
     {
-        EcsSystems _initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems;
+        EcsSystems _initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems, _fixedSystems;
         public EcsWorld World;
         private GameState _gameState;
         [Header("Systems")]
         public FloatingJoystick FloatingJoystick;
+        public Vector3 CameraOffset;
 
         [Space(10)]
         [Header("Configs")]
@@ -21,24 +22,34 @@ namespace Client {
             World = new EcsWorld();
             GameState.Clear();
             _gameState = GameState.Initialize(this);
-            _gameState.GameMode = GameMode.menuSystem;
+            _gameState.GameMode = GameMode.runSystems;
 
             _initSystems = new EcsSystems(World, _gameState);
             _runSystems = new EcsSystems(World, _gameState);
             _menuSystems = new EcsSystems(World, _gameState);
             _winSystems = new EcsSystems(World, _gameState);
             _loseSystems = new EcsSystems(World, _gameState);
+            _fixedSystems = new EcsSystems(World, _gameState);
 
             _initSystems
-                .Add(new InitPlayer());
+                .Add(new InitPlayer())
+                .Add(new InitInput())
+                .Add(new InitJoystick())
+                .Add(new InitCamera())
             ;
 
             //_menuSystems
             //;
 
-            //_playSystems
-            //;
+            _runSystems
+                .Add(new JoystickController())
+                .Add(new MoveSystem())
+            ;
 
+            _fixedSystems
+                .Add(new CameraSystem())
+
+            ;
             //_winSystems
             //;
 
@@ -49,8 +60,8 @@ namespace Client {
             _initSystems.Add (new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem ());
 #endif
 
-            InjectAllSystems(_initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems);
-            InitAllSystems(_initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems);
+            InjectAllSystems(_initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems, _fixedSystems);
+            InitAllSystems(_initSystems, _runSystems, _menuSystems, _winSystems, _loseSystems, _fixedSystems);
         }
         private void InjectAllSystems(params EcsSystems[] systems)
         {
@@ -70,10 +81,14 @@ namespace Client {
         void Update ()
         {
             _initSystems?.Run();
-            if (GameState.Get().GameMode.HasFlag(GameMode.menuSystem)) _menuSystems?.Run();
             if (GameState.Get().GameMode.HasFlag(GameMode.runSystems)) _runSystems?.Run();
+            if (GameState.Get().GameMode.HasFlag(GameMode.menuSystem)) _menuSystems?.Run();
             if (GameState.Get().GameMode.HasFlag(GameMode.winSystem)) _winSystems?.Run();
             if (GameState.Get().GameMode.HasFlag(GameMode.loseSystem)) _loseSystems?.Run();
+        }
+        private void FixedUpdate()
+        {
+            if (GameState.Get().GameMode.HasFlag(GameMode.runSystems)) _fixedSystems?.Run();
         }
 
         void OnDestroy () {

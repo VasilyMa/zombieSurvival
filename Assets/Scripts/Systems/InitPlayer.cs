@@ -40,7 +40,7 @@ namespace Client {
             animatorComponent.Animator = viewComponent.ECSInfo.Animator;
             viewComponent.ECSInfo.Entity = entity;
             viewComponent.GameObject = playerObject;
-
+            viewComponent.Rigidbody = viewComponent.GameObject.GetComponent<Rigidbody>();
         }
     }
 }
