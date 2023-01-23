@@ -14,6 +14,7 @@ namespace Client {
         readonly EcsPoolInject<MovementComponent> _movePool = default;
 
         readonly EcsPoolInject<ShootEvent> _shootEvent = default;
+        readonly EcsPoolInject<BulletComponent> _bulletPool = default;
 
         float timeToShoot = .25f;
         public void Run (IEcsSystems systems) 
@@ -21,6 +22,7 @@ namespace Client {
             foreach (var entity in _filter.Value)
             {
                 ref var viewComponent = ref _viewPool.Value.Get(_state.Value.EntityPlayer);
+                ref var damageCompoennt = ref _damagePool.Value.Get(_state.Value.EntityPlayer);
 
                 if (timeToShoot > 0)
                 {
@@ -34,49 +36,47 @@ namespace Client {
 
                 if (Input.GetMouseButton(0))
                 {
-                    var point = GetTargetPosition();
+                    var target = GetTargetPosition();
 
-                    int maxColliders = 10;
-                    Collider[] hitColliders = new Collider[maxColliders];
-                    int numColliders = Physics.OverlapSphereNonAlloc(point, 2, hitColliders);
-                    for (int i = 0; i < numColliders; i++)
+                    if(target.gameObject.CompareTag("Enemy"))
                     {
-                        if (hitColliders[i].gameObject.CompareTag("Enemy"))
-                        {
-                            viewComponent.GameObject.transform.LookAt(hitColliders[i].transform.position);
+                        viewComponent.GameObject.transform.LookAt(target);
+                        //to do instatiate with pools
+                        var bullet = _state.Value.PoolBullet.GetPool().GetAvailableElement();
+                        bullet.transform.position = viewComponent.FirePoint.position;
+                        var shootEntity = _world.Value.NewEntity();
 
-                            //to do instatiate with pools
-                            var bullet = GameObject.Instantiate(_state.Value.Bullet, viewComponent.GameObject.transform.position, viewComponent.GameObject.transform.rotation);
-                            var shootEntity = _world.Value.NewEntity();
-                            ref var viewComp = ref _viewPool.Value.Add(shootEntity);
-                            ref var shootComp = ref _shootEvent.Value.Add(shootEntity);
-                            ref var damageComp = ref _damagePool.Value.Add(shootEntity);
-                            ref var moveComp = ref _movePool.Value.Add(shootEntity);
-                            viewComp.GameObject = bullet;
-                            viewComp.Rigidbody = bullet.GetComponent<Rigidbody>();
-                            moveComp.Direction = point - viewComponent.GameObject.transform.position;
-                            moveComp.Rotation = moveComp.Direction;
-                            moveComp.MoveSpeed = 5;
+                        ref var viewComp = ref _viewPool.Value.Add(shootEntity);
+                        ref var shootComp = ref _shootEvent.Value.Add(shootEntity);
+                        ref var damageComp = ref _damagePool.Value.Add(shootEntity);
+                        ref var moveComp = ref _movePool.Value.Add(shootEntity);
+                        ref var projectileComp = ref _bulletPool.Value.Add(shootEntity);
 
-                            timeToShoot = .25f;
-                            break;
-                        }
+                        viewComp.GameObject = bullet.gameObject;
+                        viewComp.Rigidbody = bullet.GetComponent<Rigidbody>();
+                        projectileComp.Projectile = bullet.GetComponent<Projectile>();
+                        moveComp.Direction = target.position - viewComponent.GameObject.transform.position;
+                        moveComp.Rotation = moveComp.Direction;
+                        moveComp.MoveSpeed = 40;
+                        damageComp.DamageAmount = damageCompoennt.DamageAmount;
+
+                        timeToShoot = .25f;
+                        break;
                     }
                 }
             }
         }
-        Vector3 GetTargetPosition()
+        Transform GetTargetPosition()
         {
-            Vector3 position = Vector3.zero;
+            Transform target = null;
             var camera = _cameraPool.Value.Get(_state.Value.EntityCamera).Camera;
             RaycastHit hit;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit)) // Mathf.Infinity, _state.Value.LayerEnemies
             {
-                position = hit.point;
-                Debug.Log($"Collider is {hit.collider}, Position hit is {position}");
+                target = hit.transform;
             }
-            return position;
+            return target;
         }
     }
 }

@@ -13,11 +13,18 @@ namespace Client {
         public Vector3 CameraOffset;
         public int Counters;
         public int EnemiesOnCounter;
-        public GameObject bullet;
+        public PoolBullet BulletPool;
+        public DamagepopupPool DamageopopupPool;
+        public PoolBlood BloodPool;
+        public LayerMask LayerEnemies;
+        public Counter CurrentEncounter;
 
         [Space(10)]
         [Header("Configs")]
         public PlayerConfig PlayerConfig;
+        public EnemiesConfig EnemiesConfig;
+        public EncounterConfigs EncounterConfigs;
+        public InterfaceConfig InterfaceConfig;
 
         void Start ()
         {
@@ -25,7 +32,7 @@ namespace Client {
             GameState.Clear();
             _gameState = GameState.Initialize(this);
             _gameState.GameMode = GameMode.runSystems;
-
+            _gameState.Load();
             _initSystems = new EcsSystems(World, _gameState);
             _runSystems = new EcsSystems(World, _gameState);
             _menuSystems = new EcsSystems(World, _gameState);
@@ -38,6 +45,8 @@ namespace Client {
                 .Add(new InitInput())
                 .Add(new InitCamera())
                 .Add(new InitSpawnSystem())
+                .Add(new InitEncounters())
+                .Add(new InitInterface())
             ;
 
             //_menuSystems
@@ -47,6 +56,10 @@ namespace Client {
                 .Add(new MoveSystem())
                 .Add(new SpawnSystem())
                 .Add(new PlayerShootSystem())
+                .Add(new AttackSystem())
+                .Add(new SpawnSystem())
+                .Add(new DamageSystem())
+                .Add(new EncounterSystem())
             ;
 
             _fixedSystems
@@ -135,6 +148,10 @@ namespace Client {
                 World.Destroy ();
                 World = null;
             }
+        }
+        private void OnApplicationQuit()
+        {
+            _gameState.Save();
         }
     }
 }

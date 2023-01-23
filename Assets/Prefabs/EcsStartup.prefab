@@ -44,7 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d735ce29f470ac4a8461e6b57bb6a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraOffset: {x: 10, y: 10, z: 4}
+  CameraOffset: {x: 6, y: 10, z: 3}
   Counters: 0
   EnemiesOnCounter: 0
+  BulletPool: {fileID: 0}
+  DamageopopupPool: {fileID: 0}
+  BloodPool: {fileID: 0}
+  LayerEnemies:
+    serializedVersion: 2
+    m_Bits: 8
+  CurrentEncounter: {fileID: 0}
   PlayerConfig: {fileID: 11400000, guid: b663ee79f7343f24ab33b7ca661a128c, type: 2}
+  EnemiesConfig: {fileID: 11400000, guid: 3442a69475d4268489321d32bed812ce, type: 2}
+  EncounterConfigs: {fileID: 11400000, guid: f80b1e884e7f6e64ba2ddfcf525350ef, type: 2}

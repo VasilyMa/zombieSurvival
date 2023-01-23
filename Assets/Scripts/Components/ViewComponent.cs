@@ -4,5 +4,6 @@ namespace Client {
         public GameObject GameObject;
         public ECSInfo ECSInfo;
         public Rigidbody Rigidbody;
+        public Transform FirePoint;
     }
 }

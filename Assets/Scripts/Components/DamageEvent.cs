@@ -1,5 +1,6 @@
 namespace Client {
     struct DamageEvent {
-        // add your data here.
+        public int DamageAmount;
+        public int DamagableEntity;
     }
 }
